@@ -1,39 +1,57 @@
-## Put comments here that give an overall description of what your
-## functions do
+## This file contains two functions:
+##  - makeCacheMatrix
+##  - cacheSolve
+##
+## The two functions are related and makeCacheMatrix should be called before cacheSolve
+## NOTE: makeCacheMatrix assumes that an invertible/square matrix is always supplied
 
-## Write a short comment describing this function
 
+## FUNCTION: makeCacheMatrix 
+##  parameter 1: an invertible/square matrix
+##  return: returns a list with 4 functions:
+##        Function 1: "set" - should not be used.  Allows the user to manually set the inverse of the matrix
+##        Function 2: "get" - simply returns the matrix that isused for the input to makeCacheMatrix
+##        Function 3: "setSolve" - stores the inverse of the matrix into the cache variable "m"
+##        Function 4: "getSolve" - gets the value currently stored in the cache variable "m"
 makeCacheMatrix <- function(x = matrix()) {
   m <- NULL
+  
   set <- function(y) {
     x <<- y
     m <<- NULL
   }
+  
   get <- function() x
-  setmean <- function(mean) m <<- mean
-  getmean <- function() m
+  
+  setSolve <- function(theSolve) m <<- theSolve
+  
+  getSolve <- function() m
+  
   list(set = set, get = get,
-       setmean = setmean,
-       getmean = getmean)
+       setSolve = setSolve,
+       getSolve = getSolve)
 }
 
 
-## Write a short comment describing this function
-
+## FUNCTION: cacheSolve
+##  parameter 1: a list of 4 functions created by using the makeCacheMatrix function above
+##  return: returns a matrix of numberals that is the inverse of the matrix supplied to the makeCacheMatrix fuction
+##
+## NOTE: This function will first check the cache variable "m" to see if the inverse has already been computed, 
+##  and is stored in the environment.  If the cache is empty/blank, the inverse is calculated and then stored back 
+##  into the "m" cache variable
+##
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
-  m <- x$getmean()
+  m <- x$getSolve()
+  
   if(!is.null(m)) {
-    message("getting cached data")
+    message("getting cached data for the Matrix Solve")
     return(m)
   }
+  
+  #ELSE, if m is null
   data <- x$get()
-  m <- mean(data, ...)
-  x$setmean(m)
+  m <- solve(data, ...)
+  x$setSolve(m)
   m
 }
-
-
-
-makeVector <- function(x = numeric()) {}
-cachemean <- function(x, ...) {}
